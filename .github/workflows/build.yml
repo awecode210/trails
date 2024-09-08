@@ -1,0 +1,29 @@
+name: Build on PR - CI
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+      - deploy
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    env:
+      NODE_ENV: production
+      DATABASE_URL: ${{ secrets.DATABASE_URL }} # Using a secret stored in GitHub Secrets
+      JWT_SECRET: ${{ secrets.JWT_SECRET }} # Using a secret stored in GitHub Secrets
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run Build
+        run: npm run build &
